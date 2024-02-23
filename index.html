@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Notes & Resources</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      background-color: #343a40;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 36px;
+      margin-top: 0;
+    }
+    nav {
+      background-color: #343a40;
+      color: white;
+      padding: 10px;
+    }
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      resize: none;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Student Notes & Resources</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#online-session">Online Sessions</a></li>
+      <li><a href="#physical-session">Physical Sessions</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="online-session">
+      <h2>Online Sessions</h2>
+      <form id="online-session-form">
+        <input type="text" id="online-topic" placeholder="Topic">
+        <textarea id="online-notes" placeholder="Notes"></textarea>
+        <input type="text" id="online-title" placeholder="Resource Title">
+        <input type="text" id="online-url" placeholder="Resource URL">
+        <button type="submit">Add Resource</button>
+      </form>
+    </section>
+
+    <section id="physical-session">
+      <h2>Physical Sessions</h2>
+      <form id="physical-session-form">
+        <input type="text" id="physical-topic" placeholder="Topic">
+        <textarea id="physical-notes" placeholder="Notes"></textarea>
+        <input type="text" id="physical-title" placeholder="Resource Title">
+        <input type="text" id="physical-url" placeholder="Resource URL">
+        <button type="submit">Add Resource</button>
+      </form>
+    </section>
+
+    <section id="saved-resources">
+      <h2>Saved Resources</h2>
+      <ul id="resource-list"></ul>
+      <button id="reset-button">Reset Data</button>
+
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2024 Student Notes & Resources. All rights reserved.
+  </footer>
+
+  <script>
+    const onlineForm = document.getElementById('online-session-form');
+    const physicalForm = document.getElementById('physical-session-form');
+    const resourceList = document.getElementById('resource-list');
+    const resetButton = document.getElementById('reset-button');
+
+
+    onlineForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      saveResource('online');
+    });
+
+    physicalForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      saveResource('physical');
+    });
+    resetButton.addEventListener('click', function() {
+      localStorage.removeItem('resources');
+      displayResources();
+    });
+
+    function saveResource(sessionType) {
+      const topic = document.getElementById(`${sessionType}-topic`).value;
+      const notes = document.getElementById(`${sessionType}-notes`).value;
+      const title = document.getElementById(`${sessionType}-title`).value;
+      const url = document.getElementById(`${sessionType}-url`).value;
+
+      const resource = { topic, notes, title, url };
+      const savedResources = JSON.parse(localStorage.getItem('resources')) || [];
+      savedResources.push(resource);
+      localStorage.setItem('resources', JSON.stringify(savedResources));
+
+      displayResources();
+    }
+
+    function displayResources() {
+      resourceList.innerHTML = '';
+      const savedResources = JSON.parse(localStorage.getItem('resources')) || [];
+      savedResources.forEach(function(resource) {
+        const li = document.createElement('li');
+        const hyperlink = document.createElement('a');
+        hyperlink.setAttribute('href', resource.url);
+        hyperlink.textContent = resource.title;
+        li.appendChild(hyperlink);
+        li.innerHTML += ` - ${resource.topic} (${resource.notes})`;
+        resourceList.appendChild(li);
+      });
+    }
+    displayResources();
+  </script>
+</body>
+</html>
+
