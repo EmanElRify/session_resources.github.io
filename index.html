@@ -173,16 +173,20 @@
       displayResources();
     }
 
-    function displayResources() {
+function displayResources() {
       resourceList.innerHTML = '';
       const savedResources = JSON.parse(localStorage.getItem('resources')) || [];
-      savedResources.forEach(function(resource) {
+      savedResources.forEach(function(resource, index) {
         const li = document.createElement('li');
-        const hyperlink = document.createElement('a');
-        hyperlink.setAttribute('href', resource.url);
-        hyperlink.textContent = resource.title;
-        li.appendChild(hyperlink);
-        li.innerHTML += ` - ${resource.topic} (${resource.notes})`;
+        li.innerHTML = `<strong>${resource.title}</strong>: <a href="${resource.url}" target="_blank">${resource.url}</a> - ${resource.topic} (${resource.notes})`;
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', function() {
+          savedResources.splice(index, 1);
+          localStorage.setItem('resources', JSON.stringify(savedResources));
+          displayResources();
+        });
+        li.appendChild(removeButton);
         resourceList.appendChild(li);
       });
     }
