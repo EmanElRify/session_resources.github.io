@@ -188,6 +188,7 @@ function displayResources() {
         });
         li.appendChild(removeButton);
         resourceList.appendChild(li);
+        localStorage.setItem("session",li)
       });
     }
     displayResources();
